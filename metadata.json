@@ -1,0 +1,7 @@
+{
+  "name": "文须记 (WenXuJi)",
+  "description": "A smart, AI-powered bookkeeping application featuring natural language transaction entry, receipt scanning, and financial insights.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}

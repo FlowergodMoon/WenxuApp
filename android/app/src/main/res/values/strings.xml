@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">文须记</string>
+    <string name="title_activity_main">文须记</string>
+    <string name="package_name">com.yourcompany.wenxuji</string>
+    <string name="custom_url_scheme">com.yourcompany.wenxuji</string>
+</resources>
