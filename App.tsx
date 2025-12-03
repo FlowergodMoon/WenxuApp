@@ -48,10 +48,9 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="fixed inset-0 bg-slate-50 text-slate-900 font-sans flex flex-col overflow-hidden">
-
-      {/* Header - Fixed */}
-      <header className="bg-white/80 backdrop-blur-md z-10 px-6 py-4 pt-safe border-b border-gray-100 flex items-center justify-between flex-shrink-0">
+    <div className="app-container">
+      {/* Header - Absolutely fixed at top */}
+      <header className="app-header">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-gray-900 rounded-xl flex items-center justify-center text-white">
             <Wallet size={20} />
@@ -69,9 +68,9 @@ const App: React.FC = () => {
         </div>
       </header>
 
-      {/* Main Content - Scrollable */}
-      <main className="flex-1 overflow-y-auto overflow-x-hidden overscroll-none">
-        <div className="max-w-2xl mx-auto p-4 pb-24">
+      {/* Main Content - Scrollable area between header and nav */}
+      <main className="app-main">
+        <div className="max-w-2xl mx-auto p-4 pb-8">
           {currentView === 'dashboard' ? (
             <Dashboard transactions={transactions} />
           ) : (
@@ -80,23 +79,8 @@ const App: React.FC = () => {
         </div>
       </main>
 
-      {/* Floating Action Button */}
-      <div className="fixed bottom-24 right-6 z-20 md:right-[calc(50%-300px)]">
-        <button
-          onClick={() => setIsAddModalOpen(true)}
-          className="w-14 h-14 bg-gray-900 hover:bg-black text-white rounded-full shadow-xl shadow-gray-400/50 flex items-center justify-center transition-transform hover:scale-110 active:scale-95"
-        >
-          <Plus size={28} />
-        </button>
-      </div>
-
-      {/* Add Modal */}
-      {isAddModalOpen && (
-        <AddTransaction onAdd={addTransaction} onClose={() => setIsAddModalOpen(false)} />
-      )}
-
-      {/* Bottom Navigation - Fixed */}
-      <nav className="bg-white border-t border-gray-100 px-6 py-2 z-40 pb-safe flex-shrink-0">
+      {/* Bottom Navigation - Absolutely fixed at bottom */}
+      <nav className="app-nav">
         <div className="max-w-md mx-auto flex justify-around items-center h-16">
           <button
             onClick={() => setCurrentView('dashboard')}
@@ -118,6 +102,21 @@ const App: React.FC = () => {
         </div>
       </nav>
 
+      {/* Floating Action Button */}
+      <div className="app-fab">
+        <button
+          onClick={() => setIsAddModalOpen(true)}
+          className="w-14 h-14 bg-gray-900 hover:bg-black text-white rounded-full shadow-xl shadow-gray-400/50 flex items-center justify-center transition-transform hover:scale-110 active:scale-95"
+        >
+          <Plus size={28} />
+        </button>
+      </div>
+
+      {/* Add Modal */}
+      {isAddModalOpen && (
+        <AddTransaction onAdd={addTransaction} onClose={() => setIsAddModalOpen(false)} />
+      )}
+
       <style>{`
         @keyframes slide-up {
           from { transform: translateY(100%); opacity: 0; }
@@ -126,24 +125,68 @@ const App: React.FC = () => {
         .animate-slide-up {
           animation: slide-up 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
-        .pt-safe {
-          padding-top: calc(env(safe-area-inset-top, 0px) + 1rem);
+
+        /* 应用容器 - 完全固定 */
+        .app-container {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background-color: #f8fafc;
+          color: #0f172a;
+          font-family: 'Noto Sans SC', sans-serif;
+          display: flex;
+          flex-direction: column;
+          overflow: hidden;
         }
-        .pb-safe {
-          padding-bottom: env(safe-area-inset-bottom, 20px);
+
+        /* 头部 - 固定高度，不参与滚动 */
+        .app-header {
+          flex-shrink: 0;
+          background: rgba(255, 255, 255, 0.85);
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+          z-index: 100;
+          padding: calc(env(safe-area-inset-top, 0px) + 1rem) 1.5rem 1rem 1.5rem;
+          border-bottom: 1px solid #f1f5f9;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
         }
-        /* 禁用回弹效果 */
-        .overscroll-none {
-          overscroll-behavior: none;
+
+        /* 主内容区域 - 可滚动，带回弹效果 */
+        .app-main {
+          flex: 1;
+          overflow-y: auto;
+          overflow-x: hidden;
+          overscroll-behavior-y: auto;
           -webkit-overflow-scrolling: touch;
         }
-        /* 确保 body 和 html 不滚动 */
-        body, html {
-          overflow: hidden;
+
+        /* 底部导航 - 固定高度，不参与滚动 */
+        .app-nav {
+          flex-shrink: 0;
+          background: rgba(255, 255, 255, 0.95);
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+          border-top: 1px solid #f1f5f9;
+          z-index: 100;
+          padding: 0.5rem 1.5rem calc(env(safe-area-inset-bottom, 20px)) 1.5rem;
+        }
+
+        /* 浮动按钮 */
+        .app-fab {
           position: fixed;
-          width: 100%;
-          height: 100%;
-          overscroll-behavior: none;
+          right: 1.5rem;
+          bottom: calc(env(safe-area-inset-bottom, 20px) + 5.5rem);
+          z-index: 90;
+        }
+
+        @media (min-width: 768px) {
+          .app-fab {
+            right: calc(50% - 300px);
+          }
         }
       `}</style>
     </div>
